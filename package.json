@@ -1,0 +1,32 @@
+{
+  "name": "telematics-backend",
+  "version": "1.0.0",
+  "description": "This repo contains what is necessary to build the backend of the lab's IoT system",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grupoanubis/watch-backend.git"
+  },
+  "keywords": [
+    "BACKEND",
+    "IoT",
+    "Mongo"
+  ],
+  "author": "Aaron Arguello",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grupoanubis/watch-backend/issues"
+  },
+  "homepage": "https://github.com/grupoanubis/watch-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.2",
+    "mongoose": "^6.4.5",
+    "morgan": "^1.10.0"
+  }
+}
