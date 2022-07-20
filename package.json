@@ -4,7 +4,9 @@
   "description": "This repo contains what is necessary to build the backend of the lab's IoT system",
   "main": "app.js",
   "scripts": {
-    "test": "npm run test"
+    "test": "npm run test",
+    "start": "node app",
+    "dev": "nodemon app"
   },
   "repository": {
     "type": "git",

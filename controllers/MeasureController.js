@@ -46,7 +46,7 @@ const getMeasures = async ( req, res = response ) => {
             Measure.find().populate('sensor').exec()
         ]);
 
-        res.status(201).json({
+        res.status(200).json({
             total,
             measures
         });
