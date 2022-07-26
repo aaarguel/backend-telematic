@@ -1,26 +1,27 @@
 const { response, request } = require('express');
 
-const Sensor = require('../models/Sensor');
-const Measure = require('../models/MeasureSensor');
 
-const createSensor = async( req, res = response )=> {
+const Camera = require('../models/Camera');
+const Measures = require('../models/MeasureCamera');
 
-    const { name, magnitude } = req.body;
+const createCamera = async( req, res = response )=> {
+
+    const { name, type } = req.body;
     
     try {
-        let sensor = await Sensor.findOne({ name });                
+        let camera = await Camera.findOne({ name });                
 
-        if( sensor ) {
+        if( camera ) {
             return res.status(400).json({
                 ok: false,
-                msg: 'A sensor already exists with that name'
+                msg: 'A camera already exists with that name'
             });
         }
         
-        const nsensor = new Sensor( { name,magnitude} );        
-        nsensor.save();
+        const ncamera = new Camera( { name,type} );        
+        ncamera.save();
 
-        res.status(201).json( nsensor);
+        res.status(201).json( ncamera);
 
 
     }catch ( error ) {
@@ -34,16 +35,16 @@ const createSensor = async( req, res = response )=> {
 }
 
 
-const getSensors = async ( req, res = response ) => {
+const getCameras = async ( req, res = response ) => {
     try {        
-        const [ total, sensors ] = await Promise.all( [
-            Sensor.countDocuments(),
-            Sensor.find()
+        const [ total, cameras ] = await Promise.all( [
+            Camera.countDocuments(),
+            Camera.find()
         ]);
 
         res.status(201).json({
             total,
-            sensors
+            cameras
         });
         
     } catch (error) {
@@ -57,15 +58,15 @@ const getSensors = async ( req, res = response ) => {
 
 const createMeasure = async( req, res = response )=> {
 
-    const { value,name_sensor } = req.body;
+    const { persons,img_base64,name_camera } = req.body;
     
     try {
     
-        let sensor = await Sensor.findOne({ name:name_sensor });                
+        let camera = await Camera.findOne({ name:name_camera });                
     
-        if( sensor ) {
+        if( camera ) {
             
-            const measure = new Measure( { value,sensor: sensor._id} );        
+            const measure = new Measures( { persons,img_base64,camera: camera._id} );        
             measure.save();
             
             res.status(201).json( measure);
@@ -73,7 +74,7 @@ const createMeasure = async( req, res = response )=> {
         else{
             return res.status(400).json({
                 ok: false,
-                msg: 'This sensor does not exist'
+                msg: 'This camera does not exist'
             });
         }
         
@@ -93,8 +94,8 @@ const createMeasure = async( req, res = response )=> {
 const getMeasures = async ( req, res = response ) => {
     try {        
         const [ total, measures ] = await Promise.all( [
-            Measure.countDocuments(),
-            Measure.find().populate('sensor').exec()
+            Measures.countDocuments(),
+            Measures.find({},{createdAt: 0, updatedAt: 0,  _id : 1, img_base64:0})
         ]);
 
         res.status(200).json({
@@ -112,8 +113,8 @@ const getMeasures = async ( req, res = response ) => {
 }
 
 module.exports = {
-    getSensors,
-    createSensor,
+    getCameras,
+    createCamera,
     getMeasures,
     createMeasure,
 }

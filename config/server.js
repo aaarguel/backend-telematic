@@ -14,7 +14,7 @@ class Server {
         
         this.paths = {
             sensor:    '/sensors', 
-            measures:    '/measures',
+            camera:    '/cameras'
         };
 
 
@@ -44,9 +44,9 @@ class Server {
         this.app.use( cors() );
 
         // Body JSON
-        
-        this.app.use( express.urlencoded({extended : true}) );
-        this.app.use( express.json() );
+                
+        this.app.use(express.json({limit: '50mb'}));
+        this.app.use(express.urlencoded({limit: '50mb',extended:true}));
         
         // Public Directory
         this.app.use( express.static('public') );
@@ -54,8 +54,8 @@ class Server {
     }
     
     routes() {     
-        this.app.use( this.paths.sensor, require('../routes/SensorRoute'));    
-        this.app.use( this.paths.measures, require('../routes/MeasureRoute'));  
+        this.app.use( this.paths.sensor, require('../routes/SensorRoute'));  
+        this.app.use( this.paths.camera, require('../routes/CameraRoute'));    
     }
 
     listen() {        

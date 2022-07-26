@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const MeasureSchema = Schema({
+const MeasureSensorSchema = Schema({
     
     value: {
         type: Number,
@@ -18,13 +18,13 @@ const MeasureSchema = Schema({
     toJSON: {virtuals: true}
 });
 
-MeasureSchema.methods.toJSON = function() {
+MeasureSensorSchema.methods.toJSON = function() {
     const { __v, _id, ...measure  } = this.toObject();
     measure.uid = _id;
     return measure;
 }
 
 module.exports = model(
-    'Measure',
-    MeasureSchema
+    'MeasureSensor',
+    MeasureSensorSchema
 );
