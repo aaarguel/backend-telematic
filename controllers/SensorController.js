@@ -111,9 +111,31 @@ const getMeasures = async ( req, res = response ) => {
     }
 }
 
+const getLastMeasure = async ( req, res = response ) => {
+    try {        
+        const [ total, measures ] = await Promise.all( [
+            10,
+            Measure.find().sort({ createdAt: -1 }).limit(10) 
+        ]);
+
+        res.status(200).json({
+            total,
+            measures
+        });
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Please inform your administrator'
+        });        
+    }
+}
+
 module.exports = {
     getSensors,
     createSensor,
     getMeasures,
+    getLastMeasure,
     createMeasure,
 }

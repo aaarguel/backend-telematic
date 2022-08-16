@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { getSensors, createSensor, createMeasure, getMeasures } = require('../controllers/SensorController');
+const { getSensors, createSensor, createMeasure, getMeasures, getLastMeasure } = require('../controllers/SensorController');
 const { validateFields } = require('../middlewares/field-validator');
 
 const router = Router();
@@ -20,5 +20,7 @@ router.post('/measures', [
 ], createMeasure);
 
 router.get('/measures', getMeasures);
+
+router.get('/measures/last', getLastMeasure);
 
 module.exports = router;
