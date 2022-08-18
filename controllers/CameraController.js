@@ -38,16 +38,28 @@ const createCamera = async( req, res = response )=> {
 const getCameras = async ( req, res = response ) => {
     try {        
         const [ total, cameras ] = await Promise.all( [
-            Camera.countDocuments(),
+            Camera.countDocuments(),            
             Camera.find()
         ]);
 
+        
+        const cameraswithLastData = cameras.map(cam=>{            
+            return Measures.findOne({camera:cam._id},{createdAt: 0, updatedAt: 0,  _id : 1, img_base64:0}).sort({ createdAt: -1 }).then(lastMeasure=>{
+                cam = cam.toJSON();
+                cam.lastMeasure = lastMeasure?.persons ? lastMeasure.persons : 0;
+                return cam;
+            }) 
+        });
+
+        const query  = await Promise.all(cameraswithLastData);
+
         res.status(201).json({
             total,
-            cameras
+            data: query
         });
         
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Please inform your administrator'
@@ -68,7 +80,8 @@ const createMeasure = async( req, res = response )=> {
             
             const measure = new Measures( { persons,img_base64,camera: camera._id} );        
             measure.save();
-            
+
+            req.io.emit("camerameasure:read",measure.toJSON());
             res.status(201).json( measure);
         }
         else{
@@ -100,7 +113,7 @@ const getMeasures = async ( req, res = response ) => {
 
         res.status(200).json({
             total,
-            measures
+            data: measures
         });
         
     } catch (error) {

@@ -35,18 +35,30 @@ const createSensor = async( req, res = response )=> {
 
 
 const getSensors = async ( req, res = response ) => {
-    try {        
+    try {               
         const [ total, sensors ] = await Promise.all( [
             Sensor.countDocuments(),
             Sensor.find()
-        ]);
+        ]);                
+
+        const sensorswithLastData = sensors.map(sen=>{      
+            return Measure.findOne({sensor:sen._id},{createdAt: 0, updatedAt: 0,  _id : 1}).sort({ createdAt: -1 }).then(lastMeasure=>{
+                sen = sen.toJSON();                
+                sen.lastMeasure = lastMeasure?.value ? lastMeasure.value : 0;                  
+                return sen;
+            }) 
+        });
+
+        const query  = await Promise.all(sensorswithLastData);
+        
 
         res.status(201).json({
             total,
-            sensors
+            data: query
         });
         
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Please inform your administrator'
@@ -67,6 +79,8 @@ const createMeasure = async( req, res = response )=> {
             
             const measure = new Measure( { value,sensor: sensor._id} );        
             measure.save();
+            
+            req.io.emit("sensormeasure:read",measure.toJSON());
             
             res.status(201).json( measure);
         }
@@ -96,10 +110,12 @@ const getMeasures = async ( req, res = response ) => {
             Measure.countDocuments(),
             Measure.find().populate('sensor').exec()
         ]);
+        
+        
 
         res.status(200).json({
             total,
-            measures
+            data: measures
         });
         
     } catch (error) {
@@ -120,7 +136,7 @@ const getLastMeasure = async ( req, res = response ) => {
 
         res.status(200).json({
             total,
-            measures
+            data: measures
         });
         
     } catch (error) {
