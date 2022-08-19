@@ -108,7 +108,7 @@ const getMeasures = async ( req, res = response ) => {
     try {        
         const [ total, measures ] = await Promise.all( [
             Measures.countDocuments(),
-            Measures.find({},{createdAt: 0, updatedAt: 0,  _id : 1, img_base64:0})
+            Measures.find({},{createdAt: 1, updatedAt: 1,  _id : 1, img_base64:0})
         ]);
 
         res.status(200).json({
