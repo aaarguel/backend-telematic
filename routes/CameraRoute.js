@@ -17,8 +17,7 @@ router.get('/', getCameras);
 router.post('/measures', [
     check('persons', 'El valor es obligatorio').notEmpty(),
     check('img_base64', 'El valor es obligatorio').notEmpty(),
-    check('name_camera', 'Es obligatorio enviar el nombre del sensor').notEmpty(),
-    validateLocalhost,  
+    check('name_camera', 'Es obligatorio enviar el nombre del sensor').notEmpty(), 
     validateFields
 ], createMeasure);
 
