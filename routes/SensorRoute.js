@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 const { getSensors, createSensor, createMeasure, getMeasures, getLastMeasure } = require('../controllers/SensorController');
 const { validateFields } = require('../middlewares/field-validator');
+const { validateLocalhost } = require('../middlewares/localhost-validator');
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.get('/', getSensors);
 router.post('/measures', [
     check('value', 'El valor es obligatorio').notEmpty(),
     check('name_sensor', 'Es obligatorio enviar el nombre del sensor').notEmpty(),    
+    validateLocalhost,
     validateFields
 ], createMeasure);
 
