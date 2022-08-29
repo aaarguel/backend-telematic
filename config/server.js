@@ -15,7 +15,7 @@ class Server {
         this.server = require('http').createServer( this.app );
         this.io     = require('socket.io')( this.server, {           
             cors: {
-              origin: "http://localhost:3000",
+              origin: ["http://localhost:3000","http://200.126.14.228:8071"],
               methods: ["GET", "POST"]
             }
         });
