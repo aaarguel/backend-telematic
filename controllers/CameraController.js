@@ -53,7 +53,7 @@ const getCameras = async ( req, res = response ) => {
 
         const query  = await Promise.all(cameraswithLastData);
 
-        res.status(201).json({
+        res.status(200).json({
             total,
             data: query
         });

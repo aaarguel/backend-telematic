@@ -14,6 +14,10 @@ const CameraSchema = Schema({
     toJSON: {virtuals: true}
 });
 
+CameraSchema.index({"createdAt":1})
+CameraSchema.index({"createdAt":-1})
+CameraSchema.index({"updatedAt":1})
+CameraSchema.index({"updatedAt":-1})
 CameraSchema.methods.toJSON = function() {
     const { __v, _id, ...camera  } = this.toObject();
     camera.uid = _id;
