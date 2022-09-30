@@ -44,7 +44,7 @@ const getCameras = async ( req, res = response ) => {
 
         
         const cameraswithLastData = cameras.map(cam=>{            
-            return Measures.findOne({camera:cam._id},{createdAt: 0, updatedAt: 0,  _id : 1, img_base64:0}).sort({ createdAt: -1 }).then(lastMeasure=>{
+            return Measures.findOne({camera:cam._id},{createdAt: 0, updatedAt: 0,  _id : 1, img_base64:0},{sort:{createdAt:-1}}).then(lastMeasure=>{
                 cam = cam.toJSON();
                 cam.lastMeasure = lastMeasure?.persons ? lastMeasure.persons : 0;
                 return cam;
@@ -108,7 +108,7 @@ const getMeasures = async ( req, res = response ) => {
     try {        
         const [ total, measures ] = await Promise.all( [
             Measures.countDocuments(),
-            Measures.find({},{createdAt: 1, updatedAt: 1,  _id : 1, img_base64:1}).sort({ createdAt: -1 }).limit(10) 
+            Measures.find({},{camera:0, img_base64:0})
         ]);
 
         res.status(200).json({
@@ -125,9 +125,28 @@ const getMeasures = async ( req, res = response ) => {
     }
 }
 
+const getPhotos = async ( req, res = response ) => {
+    try{        
+        const { id }= req.body
+        // const [ photos ] = await Promise.all( [
+        //     Measures.find(id,{createdAt: 1, updatedAt: 1,  _id : 1, img_base64:0}).sort({ createdAt: -1 }).limit(10)
+        // ]);
+
+        res.status(200).json({id});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Please inform your administrator'
+        });        
+    }
+}
+
 module.exports = {
     getCameras,
     createCamera,
     getMeasures,
     createMeasure,
+    getPhotos
 }

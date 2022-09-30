@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { createCamera, getCameras, createMeasure, getMeasures } = require('../controllers/CameraController');
+const { createCamera, getCameras, createMeasure, getMeasures, getPhotos } = require('../controllers/CameraController');
 const { validateFields } = require('../middlewares/field-validator');
 const { validateLocalhost } = require('../middlewares/localhost-validator');
 
@@ -22,6 +22,10 @@ router.post('/measures', [
 ], createMeasure);
 
 router.get('/measures', getMeasures);
+
+router.get('/photos/:id',[
+    check(':id', 'Check your mongo id').isMongoId(),
+], getPhotos);
 
 
 
