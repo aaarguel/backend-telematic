@@ -21,6 +21,11 @@ const MeasureCameraSchema = Schema({
     toJSON: {virtuals: true}
 });
 
+MeasureCameraSchema.index({"createdAt":1})
+MeasureCameraSchema.index({"createdAt":-1})
+MeasureCameraSchema.index({"updatedAt":1})
+MeasureCameraSchema.index({"updatedAt":-1})
+
 MeasureCameraSchema.methods.toJSON = function() {
     const { __v, _id, ...measure  } = this.toObject();
     measure.uid = _id;
